@@ -25,7 +25,7 @@
           </label>
         </div>
         <div>
-          <button type="submit" class="btn btn-primary">Search</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </div>
     </div>
