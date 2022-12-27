@@ -11,6 +11,7 @@ use Termwind\Components\Dd;
 class CountriesController extends Controller
 {
     use FilterUrlQueriesTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -50,7 +51,7 @@ class CountriesController extends Controller
     {
 
         $filters = request()->only('country', 'valid');
-        $country =  request('country') ? self::Countries[strtolower(request('country'))] : null;
+        $country = request('country') && array_key_exists(request('country'), self::Countries) ? self::Countries[strtolower(request('country'))] : null;
         $limit = request()->get('limit', 10);
         $offset = request()->get('offset', 0);
 
@@ -64,7 +65,7 @@ class CountriesController extends Controller
         // * so we get the customers and paginate them with limit and offset and then we filter them with the country
 
         if ($country) {
-            $res =  DB::select(
+            $res = DB::select(
                 'SELECT * FROM customer WHERE phone like :country limit :limit offset :offset',
                 ['country' => '%(' . $country['country_code'] . ')%', 'limit' => $limit, 'offset' => $offset]
             );
@@ -80,12 +81,17 @@ class CountriesController extends Controller
 
             $res = $this->checkIfPhoneIsValidAndGetCustomer($filters, $res);
         } else {
-            $res =  DB::select('SELECT * FROM customer limit :limit offset :offset', ['limit' => $limit, 'offset' => $offset]);
+
+            $res = DB::select('SELECT * FROM customer limit :limit offset :offset', ['limit' => $limit, 'offset' => $offset]);
             $count = DB::select('SELECT count(*) FROM customer');
+
             foreach ($res as $customer) {
-                $customer->country = self::Countries[substr($customer->phone, 1, 3)];
-                $customer->state = preg_match($customer->country['regex'], $customer->phone);
-                $customer->phone = trim(str_replace('(' . $customer->country['country_code'] . ')', '', $customer->phone));
+                if (array_key_exists(substr($customer->phone, 1, 3), self::Countries)) {
+                    $customer->country = self::Countries[substr($customer->phone, 1, 3)];
+                    $customer->state = preg_match($customer->country['regex'], $customer->phone);
+                    $customer->phone = trim(str_replace('(' . $customer->country['country_code'] . ')', '', $customer->phone));
+                }
+
             }
             $res = $this->checkIfPhoneIsValidAndGetCustomer($filters, $res);
         }

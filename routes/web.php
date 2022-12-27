@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [App\Http\Controllers\CountriesController::class, 'index'])
-    ->name('customers.index');;
+    ->name('countries.index');;

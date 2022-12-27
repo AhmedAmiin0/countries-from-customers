@@ -1,5 +1,5 @@
 <x-layout title='Get Country From Phone Number'>
-  <form action="{{ route('customers.index') }}" method="GET">
+  <form action="{{ route('countries.index') }}" method="GET">
     <div class="row ">
       <h1>Countries</h1>
       <div class="d-flex justify-content-between">
@@ -62,11 +62,11 @@
       </div>
       <div>
         @if ($offset > 0)
-          <a href="{{ route('customers.index', ['offset' => $offset - $limit, 'limit' => $limit, 'country' => request()->country, 'valid' => request()->valid]) }}"
+          <a href="{{ route('countries.index', ['offset' => $offset - $limit, 'limit' => $limit, 'country' => request()->country, 'valid' => request()->valid]) }}"
             class="btn btn-primary">Previous</a>
         @endif
         @if ($offset + $limit < $count)
-          <a href="{{ route('customers.index', ['offset' => $offset + $limit, 'limit' => $limit, 'country' => request()->country, 'valid' => request()->valid]) }}"
+          <a href="{{ route('countries.index', ['offset' => $offset + $limit, 'limit' => $limit, 'country' => request()->country, 'valid' => request()->valid]) }}"
             class="btn btn-primary">Next</a>
         @endif
       </div>
